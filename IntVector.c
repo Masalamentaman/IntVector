@@ -68,10 +68,11 @@ size_t int_vector_get_capacity(const IntVector *v) {
 int int_vector_push_back(IntVector *v, int item) {
     if (v->size >= v->capacity) {
         v->capacity *= 2;
-        v->pointer = realloc(v->pointer, v->capacity * sizeof(int));
-        if (v->pointer == NULL)
+        int *reserve = realloc(v->pointer, v->capacity * sizeof(int));
+        if (reserve == NULL)
             return -1;
 
+        v->pointer = reserve;
         int_vector_set_item(v, v->size, item);
     }
     else {
@@ -95,9 +96,11 @@ int int_vector_shrink_to_fit(IntVector *v) {
         return 0;
     else {
         v->capacity = v->size;
-        v->pointer = realloc(v->pointer, v->capacity * sizeof(int));
-            if (v->pointer == NULL)
-                return -1;
+        int *reserve = realloc(v->pointer, v->capacity * sizeof(int));
+        if (reserve == NULL)
+            return -1;
+
+        v->pointer = reserve;
     }
 
     if (v->capacity != v->size || v->pointer == NULL)
@@ -111,9 +114,11 @@ int int_vector_resize(IntVector *v, size_t new_size) {
     if (new_size > v->size) {
         if (new_size > v->capacity) {
             v->capacity = new_size;
-            v->pointer = realloc(v->pointer, sizeof(int));
-            if (v->pointer == NULL)
+            int *reserve = realloc(v->pointer, v->capacity * sizeof(int));
+            if (reserve == NULL)
                 return -1;
+
+        v->pointer = reserve;
         }
         
         int temp = v->size;
@@ -140,9 +145,11 @@ int int_vector_reserve(IntVector *v, size_t new_capacity) {
         return 0;
     else {
         v->capacity = new_capacity;
-        v->pointer = realloc(v->pointer, v->capacity * sizeof(int));
-        if (v->pointer == NULL)
+        int *reserve = realloc(v->pointer, v->capacity * sizeof(int));
+        if (reserve == NULL)
             return -1;
+
+        v->pointer = reserve;
 
         return 0;
     }
